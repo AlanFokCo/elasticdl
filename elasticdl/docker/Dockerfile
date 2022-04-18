@@ -91,13 +91,35 @@ RUN pip install future typing -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # Note that pip is having issue downloading PyTorch on manylinux so we use curl
 # to download it instead
-RUN curl -sLo torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl \
-        https://files.pythonhosted.org/packages/24/19/4804aea17cd136f1705a5e98a00618cb8f6ccc375ad8bfa437408e09d058/torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl
-RUN python -m pip install --quiet torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl \
-        && rm torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl
+#RUN curl -sLo torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl \
+#        https://files.pythonhosted.org/packages/24/19/4804aea17cd136f1705a5e98a00618cb8f6ccc375ad8bfa437408e09d058/torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl
+#RUN python -m pip install --quiet torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl \
+#        && rm torch-1.4.0-cp36-cp36m-manylinux1_x86_64.whl
 
-RUN HOROVOD_WITHOUT_MPI=1 \
-        HOROVOD_WITHOUT_MXNET=1 \
-        HOROVOD_WITH_TENSORFLOW=1 \
-        HOROVOD_WITH_PYTORCH=1  \
-        pip install horovod==0.21.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip install torch==1.4.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# build and install horovod from master branch
+RUN pip install --upgrade pip
+RUN mkdir -p /tmp && \
+	cd /tmp/ && \
+	git clone --recursive https://github.com/horovod/horovod.git && \
+	cd horovod && \
+	pip uninstall -y horovod && \
+	rm -rf build/ dist/  && \
+	export LD_LIBRARY_PATH=/usr/local/cuda:/usr/local/cuda/compat/:${LD_LIBRARY_PATH} && \
+	HOROVOD_GPU_OPERATIONS=NCCL \
+	HOROVOD_WITH_TENSORFLOW=1 \
+	HOROVOD_WITH_PYTORCH=1 \
+	HOROVOD_WITH_MXNET=1 \
+	HOROVOD_WITH_GLOO=1 \
+	python setup.py install && \
+	rm -rf /tmp/*
+
+# install some dependency of horovod demo
+RUN pip install dataclasses tqdm
+
+#RUN HOROVOD_WITHOUT_MPI=1 \
+#        HOROVOD_WITHOUT_MXNET=1 \
+#        HOROVOD_WITH_TENSORFLOW=1 \
+#        HOROVOD_WITH_PYTORCH=1  \
+#        pip install horovod==0.20.0

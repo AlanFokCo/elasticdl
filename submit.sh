@@ -1,0 +1,21 @@
+elasticdl train \
+  --image_name=elasticdl:1.0.0 \
+  --worker_image=elasticdl:iris_estimator \
+  --ps_image=registry.cn-beijing.aliyuncs.com/huozx/kubeai-dev-console:iris_estimator \
+  --job_command="python -m model_zoo.iris.dnn_estimator" \
+  --master_resource_request="cpu=0.2,memory=1024Mi" \
+  --master_resource_limit="cpu=1,memory=2048Mi" \
+  --num_ps=1 \
+  --ps_resource_request="cpu=0.2,memory=1024Mi" \
+  --ps_resource_limit="cpu=1,memory=2048Mi" \
+  --num_workers=2 \
+  --worker_resource_request="cpu=0.3,memory=1024Mi" \
+  --worker_resource_limit="cpu=1,memory=2048Mi" \
+  --chief_resource_request="cpu=0.3,memory=1024Mi" \
+  --chief_resource_limit="cpu=1,memory=2048Mi" \
+  --num_evaluator=1 \
+  --evaluator_resource_request="cpu=0.3,memory=1024Mi" \
+  --evaluator_resource_limit="cpu=1,memory=2048Mi" \
+  --job_name=test-iris-estimator \
+  --image_pull_policy=Never \
+  --distribution_strategy=ParameterServerStrategy

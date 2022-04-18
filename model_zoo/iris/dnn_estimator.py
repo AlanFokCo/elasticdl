@@ -22,7 +22,7 @@ from elasticai_api.tensorflow.hooks import ElasticDataShardReportHook
 tf.logging.set_verbosity(tf.logging.INFO)
 
 CATEGORY_CODE = {"Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2}
-DATASET_DIR = "/data/iris.data"
+DATASET_DIR = "/iris.data"
 
 
 def read_csv(file_path):
