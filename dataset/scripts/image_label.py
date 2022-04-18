@@ -17,6 +17,7 @@ import argparse
 import logging
 import os
 import sys
+import numpy as np
 
 import recordio
 import tensorflow as tf
@@ -71,20 +72,36 @@ def convert(x, y, args, subdir):
 
 
 def main(args):
-    if args.dataset == "mnist":
-        from tensorflow.python.keras.datasets import mnist
+    # if args.dataset == "mnist":
+    #     from tensorflow.python.keras.datasets import mnist
+    #
+    #     (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    # elif args.dataset == "fashion_mnist":
+    #     from tensorflow.python.keras.datasets import fashion_mnist
+    #
+    #     (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+    # elif args.dataset == "cifar10":
+    #     from tensorflow.python.keras.datasets import cifar10
+    #
+    #     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    # else:
+    #     sys.exit("Unknown dataset {}".format(args.dataset))
 
-        (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    elif args.dataset == "fashion_mnist":
-        from tensorflow.python.keras.datasets import fashion_mnist
+    data = np.load("/work/NNop/cifar-10-train-data.npz")
 
-        (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-    elif args.dataset == "cifar10":
-        from tensorflow.python.keras.datasets import cifar10
+    train_labels = data.f.labels
+    train_data = data.f.data
 
-        (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-    else:
-        sys.exit("Unknown dataset {}".format(args.dataset))
+    data = np.load("/work/NNop/cifar-10-test-data.npz")
+
+    test_labels = data.f.labels
+    test_data = data.f.data
+
+    train_data, test_data = train_data / 255.0, test_data / 255.0
+    x_train = train_data
+    y_train = train_labels
+    x_test = test_data
+    y_test = test_labels
 
     convert(x_train, y_train, args, "train")
     convert(x_test, y_test, args, "test")

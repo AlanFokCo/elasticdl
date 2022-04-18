@@ -15,8 +15,11 @@
 # Generate mnist dataset
 DATA_PATH=$1
 
-#python /scripts/image_label.py --dataset mnist \
-#        --records_per_shard 4096 "$DATA_PATH"
+python /scripts/image_label.py --dataset cifar10 \
+        --records_per_shard 4096 data
+
+python /scripts/ttt.py --dataset cifar10 \
+        --records_per_shard 4096 /work/data
 #
 ## Generate frappe dataset
 #python /scripts/frappe_recordio_gen.py --data /root/.keras/datasets \

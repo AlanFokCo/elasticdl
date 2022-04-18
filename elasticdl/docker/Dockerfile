@@ -2,8 +2,8 @@
 ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE} as dev
-ARG EXTRA_PYPI_INDEX=https://pypi.org/simple
-
+#ARG EXTRA_PYPI_INDEX=https://pypi.org/simple
+ARG EXTRA_PYPI_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple
 # Allows for log messages by `print` in Python to be immediately dumped
 # to the stream instead of being buffered.
 ENV PYTHONUNBUFFERED 0
@@ -76,6 +76,7 @@ RUN /install-go.bash ${GO_MIRROR_URL} && rm /install-go.bash
 
 # Install protobuf and protoc
 COPY elasticdl/docker/scripts/install-protobuf.bash /
+COPY ../../protoc-3.7.1-linux-x86_64.zip /protoc-3.7.1-linux-x86_64.zip
 RUN /install-protobuf.bash && rm /install-protobuf.bash
 
 # Copy gen_dataset.sh
