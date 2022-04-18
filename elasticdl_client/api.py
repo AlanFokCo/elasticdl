@@ -56,7 +56,7 @@ FROM {{ BASE_IMAGE }} as base
 COPY {{LOCAL_PKG_DIR}}/*.whl /
 RUN pip install /*.whl --extra-index-url={{ EXTRA_PYPI_INDEX }} && rm /*.whl
 {% else %}
-RUN pip install elasticdl_preprocessing\
+RUN pip install elasticdl_preprocessing -i https://pypi.tuna.tsinghua.edu.cn/simple\
  --extra-index-url={{ EXTRA_PYPI_INDEX }}
 
 RUN pip install elasticdl --extra-index-url={{ EXTRA_PYPI_INDEX }}

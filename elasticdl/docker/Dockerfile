@@ -86,7 +86,7 @@ COPY elasticdl/python/data/recordio_gen/heart_recordio_gen.py /scripts/heart_rec
 
 FROM dev as allreduce
 
-RUN pip install future typing
+RUN pip install future typing -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # Note that pip is having issue downloading PyTorch on manylinux so we use curl
 # to download it instead
@@ -99,4 +99,4 @@ RUN HOROVOD_WITHOUT_MPI=1 \
         HOROVOD_WITHOUT_MXNET=1 \
         HOROVOD_WITH_TENSORFLOW=1 \
         HOROVOD_WITH_PYTORCH=1  \
-        pip install horovod==0.21.0
+        pip install horovod==0.21.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
