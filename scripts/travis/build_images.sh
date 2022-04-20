@@ -14,13 +14,13 @@
 
 # Pull base image quietly.  We might want to use
 # tensorflow/tensorflow:2.1.0-gpu-py3 for GPU-accelerated deep learning.
-BASE_IMAGE=tensorflow/tensorflow:2.1.2
+BASE_IMAGE=registry.cn-beijing.aliyuncs.com/alan_fok/lab_distributed:horovod-0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1
 docker pull --quiet "$BASE_IMAGE"
 
-docker build --target dev -t elasticdl:dev \
+docker build --target dev -t registry-vpc.cn-hongkong.aliyuncs.com/huozx/ubuntu:elasticdl-dev \
        -f elasticdl/docker/Dockerfile \
        --build-arg BASE_IMAGE="$BASE_IMAGE" .
 
-docker build --target allreduce -t elasticdl:dev_allreduce \
+docker build --target allreduce -t registry-vpc.cn-hongkong.aliyuncs.com/huozx/ubuntu:elasticdl-dev_allreduce \
        -f elasticdl/docker/Dockerfile \
        --build-arg BASE_IMAGE="$BASE_IMAGE" .

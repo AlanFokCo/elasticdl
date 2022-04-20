@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 0
 COPY elasticdl/docker/bashrc /etc/bash.bashrc
 RUN chmod a+rx /etc/bash.bashrc
 
-RUN apt-get -qq update && apt-get -qq install -y \
+RUN apt-get update && apt-get install -y \
         unzip \
         curl \
         git \
@@ -99,27 +99,36 @@ RUN pip install future typing -i https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install torch==1.4.0 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # build and install horovod from master branch
+
+RUN apt-get autoclean && \
+apt-get autoremove
+#
+#RUN pip install opencv-python
+#RUN apt update
+#RUN apt install -y libgl1-mesa-glx libglib2.0-dev
+
+
 RUN pip install --upgrade pip
-RUN mkdir -p /tmp && \
-	cd /tmp/ && \
-	git clone --recursive https://github.com/horovod/horovod.git && \
-	cd horovod && \
-	pip uninstall -y horovod && \
-	rm -rf build/ dist/  && \
-	export LD_LIBRARY_PATH=/usr/local/cuda:/usr/local/cuda/compat/:${LD_LIBRARY_PATH} && \
-	HOROVOD_GPU_OPERATIONS=NCCL \
-	HOROVOD_WITH_TENSORFLOW=1 \
-	HOROVOD_WITH_PYTORCH=1 \
-	HOROVOD_WITH_MXNET=1 \
-	HOROVOD_WITH_GLOO=1 \
-	python setup.py install && \
-	rm -rf /tmp/*
+#RUN mkdir -p /tmp && \
+#	cd /tmp/ && \
+#	git clone --recursive https://github.com/horovod/horovod.git && \
+#	cd horovod && \
+#	pip uninstall -y horovod && \
+#	rm -rf build/ dist/  && \
+#	export LD_LIBRARY_PATH=/usr/local/cuda:/usr/local/cuda/compat/:${LD_LIBRARY_PATH} && \
+#	HOROVOD_GPU_OPERATIONS=NCCL \
+#	HOROVOD_WITH_TENSORFLOW=1 \
+#	HOROVOD_WITH_PYTORCH=1 \
+#	HOROVOD_WITH_MXNET=1 \
+#	HOROVOD_WITH_GLOO=1 \
+#	python setup.py install && \
+#	rm -rf /tmp/*
 
 # install some dependency of horovod demo
 RUN pip install dataclasses tqdm
 
-#RUN HOROVOD_WITHOUT_MPI=1 \
-#        HOROVOD_WITHOUT_MXNET=1 \
-#        HOROVOD_WITH_TENSORFLOW=1 \
-#        HOROVOD_WITH_PYTORCH=1  \
-#        pip install horovod==0.20.0
+RUN HOROVOD_WITHOUT_MPI=1 \
+        HOROVOD_WITHOUT_MXNET=1 \
+        HOROVOD_WITH_TENSORFLOW=1 \
+        HOROVOD_WITH_PYTORCH=1  \
+        pip install horovod==0.21.0
